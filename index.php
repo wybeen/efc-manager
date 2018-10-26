@@ -92,10 +92,7 @@ Author URI: http://www.efctw.com/
 		echo '</div>';
 	}	
 	function efc_accounts_management() {
-		if ( !current_user_can( 'edit_users' ) )  {
-			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
-		}
-		echo '<div class="wrap">';
-		echo '<p>從此處設定帳號權限</p>';
+		echo '<div><p>設定帳號權限</p>';
+		include_once em_path . 'accounts_management.php';
 		echo '</div>';
 	}
