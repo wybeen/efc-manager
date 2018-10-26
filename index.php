@@ -44,7 +44,9 @@ Author URI: http://www.efctw.com/
 	add_action( 'admin_menu', 'add_plugin_menu' );
 
 	function add_plugin_menu() {
-		
+		remove_menu_page( 'index.php' );                  //Dashboard
+		remove_menu_page( 'edit.php' );                   //Posts
+		remove_menu_page( 'edit-comments.php' );          //Comments
 		add_menu_page( '產品管理', '產品管理功能', 'read', 'efc-products-menu', 'efc_products_management' );
 		add_submenu_page('efc-products-menu', '產品分類設定', '產品分類設定', 'read', 'efc-products-catalog-menu' );
 		add_submenu_page('efc-products-menu', '產品資料設定', '產品資料設定', 'read', 'efc-products-detail-menu' );
