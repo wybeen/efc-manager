@@ -82,7 +82,7 @@ Author URI: http://www.efctw.com/
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 		echo '<div class="wrap">';
-		echo '<p>從此處設定公司相關新聞</p>';
+		include_once em_path . 'news_management.php';
 		echo '</div>';
 	}
 	function efc_activities_management() {

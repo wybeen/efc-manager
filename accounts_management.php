@@ -17,12 +17,15 @@ try{
     	echo '<div id="message" class="error"><p>' . $error_string . '</p></div>';
 	} else {
 		if (count($wp_user_search)> 0){
+			echo '<table class="wp-list-table widefat fixed striped pages">';
+			echo '<tr><th class="manage-column">帳號編碼</th><th class="manage-column">帳號</th><th class="manage-column">姓名</th><th class="manage-column">產品管理權限</th><th class="manage-column">投資人專區權限</th><th class="manage-column">新聞中心權限</th><th class="manage-column">活動花絮權限</th></tr>';
 			foreach ( $wp_user_search as $userid ) {
 				$user_id       = (int) $userid->ID;
 				$user_login    = stripslashes($userid->user_login);
 				$display_name  = stripslashes($userid->display_name);
-				echo "<div><label>$user_id</label><label>$user_login</label><label>$display_name</label></div>";
+				echo "<tr><td>$user_id</td><td>$user_login</td><td>$display_name</td><td></td><td></td><td></td><td></td></tr>";
 			}
+			echo "</table>";
 		}else{
 			echo "<div><label>No users to edit.</label></div>";
 		}
