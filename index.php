@@ -41,15 +41,51 @@ Author URI: http://www.efctw.com/
 	}
 	add_action( 'activated_plugin', 'efcmanager_activation_hook' );
 
+	function create_post_type() {
+		register_post_type( 'efc_product',
+			array(
+		    	'labels' => array(
+		    		'name' => __( 'Products' ),
+		    		'singular_name' => __( 'Product' ),
+				    'add_new' => _x( '新增產品', '新增一項產品說明' ),
+				    'add_new_item' => __( '新增產品' ),
+				    'edit_item' => __( '修改產品' ),
+				    'new_item' => __( '新產品' ),
+				    'all_items' => __( '所有產品' ),
+				    'view_item' => __( '檢視產品' ),
+				    'search_items' => __( '搜尋產品' ),
+				    'not_found' => __( '找不到相關的產品' ),
+				    'not_found_in_trash' => __( '回收桶裡沒有相關的產品' ),
+				    'parent_item_colon' => '',
+				    'menu_name' => '產品管理專區'
+		    	),
+		    	'public' => true,
+		    	'has_archive' => true,
+		    )
+		);
+	}
+	add_action( 'init', 'create_post_type' );
+
+
+	function modify_editor( $post ) {
+		$type = get_post_type( $post );
+		if ( $type == 'efc_product' ) {
+			echo "<script>document.getElementsByClassName('wp-editor-expand')[0].style.display='none';</script>";
+			include_once em_path . 'efc-product.php';
+		}
+
+	}
+
+	add_action( 'edit_form_after_title', 'modify_editor');
 	add_action( 'admin_menu', 'add_plugin_menu' );
 
 	function add_plugin_menu() {
 		remove_menu_page( 'index.php' );                  //Dashboard
 		remove_menu_page( 'edit.php' );                   //Posts
 		remove_menu_page( 'edit-comments.php' );          //Comments
-		add_menu_page( '產品管理', '產品管理功能', 'read', 'efc-products-menu', 'efc_products_management' );
-		add_submenu_page('efc-products-menu', '產品分類設定', '產品分類設定', 'read', 'efc-products-catalog-menu' );
-		add_submenu_page('efc-products-menu', '產品資料設定', '產品資料設定', 'read', 'efc-products-detail-menu' );
+//		add_menu_page( '產品管理', '產品管理功能', 'read', 'efc-products-menu', 'efc_products_management' );
+//		add_submenu_page('efc-products-menu', '產品分類設定', '產品分類設定', 'read', 'efc-products-catalog-menu' );
+//		add_submenu_page('efc-products-menu', '產品資料設定', '產品資料設定', 'read', 'efc-products-detail-menu' );
 		add_menu_page( '投資人專區管理', '投資人專區管理', 'read', 'efc-investors-menu', 'efc_investors_management' );
 		add_submenu_page('efc-investors-menu', '每月營業額報告', '每月營業額報告', 'read', 'efc-investors-monthly-menu' );
 		add_submenu_page('efc-investors-menu', '財務報表', '財務報表', 'read', 'efc-investors-finance-menu' );
