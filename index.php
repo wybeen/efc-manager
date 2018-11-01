@@ -63,6 +63,24 @@ Author URI: http://www.efctw.com/
 		    	'has_archive' => true,
 		    )
 		);
+		register_taxonomy( 'efc_product_category', 'efc_prodcut', 
+			array(
+				'labels' => array(
+					'name'              => _x( '產品類別', 'taxonomy' ),
+					'singular_name'     => _x( '產品分類', 'taxonomy' ),
+					'search_items'      => __( '搜索產品分類' ),
+					'all_items'         => __( '所有產品分類' ),
+					'parent_item'       => __( '該產品分類的上層分類' ),
+					'parent_item_colon' => __( '該產品分類的上層分類：' ),
+					'edit_item'         => __( '編輯產品分類' ),
+					'update_item'       => __( '更新產品分類' ),
+					'add_new_item'      => __( '增加新的產品分類' ),
+					'new_item_name'     => __( '新產品分類' ),
+					'menu_name'         => __( '產品分類' ),
+				),
+				'hierarchical' => true,
+			)
+		);
 		register_post_type( 'efc_investor',
 			array(
 		    	'labels' => array(
@@ -145,45 +163,23 @@ Author URI: http://www.efctw.com/
 		remove_menu_page( 'index.php' );                  //Dashboard
 		remove_menu_page( 'edit.php' );                   //Posts
 		remove_menu_page( 'edit-comments.php' );          //Comments
-/*
-		add_menu_page( '產品管理', '產品管理功能', 'read', 'efc-products-menu', 'efc_products_management' );
-		add_submenu_page('efc-products-menu', '產品分類設定', '產品分類設定', 'read', 'efc-products-catalog-menu' );
-		add_submenu_page('efc-products-menu', '產品資料設定', '產品資料設定', 'read', 'efc-products-detail-menu' );
-		add_menu_page( '投資人專區管理', '投資人專區管理', 'read', 'efc-investors-menu', 'efc_investors_management' );
-		add_submenu_page('efc-investors-menu', '每月營業額報告', '每月營業額報告', 'read', 'efc-investors-monthly-menu' );
-		add_submenu_page('efc-investors-menu', '財務報表', '財務報表', 'read', 'efc-investors-finance-menu' );
-		add_submenu_page('efc-investors-menu', '法人說明會', '法人說明會', 'read', 'efc-investors-artificial-menu' );
-		add_submenu_page('efc-investors-menu', '公司年報', '公司年報', 'read', 'efc-investors-yearly-menu' );
-		add_submenu_page('efc-investors-menu', '股東會', '股東會', 'read', 'efc-investors-shareholders-menu' );
-		add_menu_page( '新聞中心管理', '新聞中心管理', 'read', 'efc-news-menu', 'efc_news_management' );
-		add_menu_page( '活動花絮管理', '活動花絮管理', 'read', 'efc-activities-menu', 'efc_activities_management' );
-*/		
-		add_menu_page( '帳號管理', '帳號管理', 'edit_users', 'efc-accounts-menu', 'efc_accounts_management' );
 	}
-/*
-	add_action("manage_posts_custom_column",  "movie_custom_columns");
-	add_filter("manage_edit-movie_columns", "movie_edit_columns");
-	function movie_custom_columns($column){
-    	global $post;
-    	switch ($column) {
-        	case "movie_director":
-            	echo get_post_meta( $post->ID, '_movie_director', true );
-            	break;
-    	}
-	}
-	function movie_edit_columns($columns){
-    	$columns['movie_director'] = '导演';
-    	return $columns;
-	}	
-*/
 	function add_extra_user_column($columns) {
-    	return array_merge( $columns, 
+		$c = array(
+			'cb'       => '<input type="checkbox" />',
+			'username' => __( 'Username' ),
+			'name'     => __( 'Name' ),
+			'email'    => __( 'E-mail' ),
+			'role'     => __( 'Role' )
+		);
+    	return array_merge( $c, 
         	      array('edit_product' => __('產品專區'), 'edit_investor' => __('投資人專區'), 'edit_news' => __('新聞中心'), 'edit_activity' => __('活動花絮')) );
 	}
 	add_filter('manage_users_columns' , 'add_extra_user_column');	
-	
-	function efc_accounts_management() {
-		echo '<div><p>設定帳號權限</p>';
-		include_once em_path . 'accounts_management.php';
-		echo '</div>';
+	add_action('manage_users_custom_column',  'show_customized_user_column_content', 10, 3);
+	function show_customized_user_column_content($value, $column_name, $user_id) {
+    	$caps = array('edit_product','edit_investor','edit_news','edit_activity');
+		if ( in_array( $column_name, $caps) )
+			return '<input type=checkbox />';
+		return $value;
 	}
