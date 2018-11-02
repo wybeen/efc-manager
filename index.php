@@ -164,6 +164,11 @@ Author URI: http://www.efctw.com/
 		remove_menu_page( 'edit.php' );                   //Posts
 		remove_menu_page( 'edit-comments.php' );          //Comments
 	}
+
+
+	/***
+	Deal with account privilige
+	***/
 	function add_extra_user_column($columns) {
 		$c = array(
 			'cb'       => '<input type="checkbox" />',
@@ -173,13 +178,22 @@ Author URI: http://www.efctw.com/
 			'role'     => __( 'Role' )
 		);
     	return array_merge( $c, 
-        	      array('edit_product' => __('產品專區'), 'edit_investor' => __('投資人專區'), 'edit_news' => __('新聞中心'), 'edit_activity' => __('活動花絮')) );
+        	      array('edit_product' => __('產品專區'), 
+				  'edit_investor' => __('投資人專區'), 
+				  'edit_news' => __('新聞中心'), 
+				  'edit_activity' => __('活動花絮')) );
 	}
 	add_filter('manage_users_columns' , 'add_extra_user_column');	
 	add_action('manage_users_custom_column',  'show_customized_user_column_content', 10, 3);
 	function show_customized_user_column_content($value, $column_name, $user_id) {
     	$caps = array('edit_product','edit_investor','edit_news','edit_activity');
 		if ( in_array( $column_name, $caps) )
-			return '<input type=checkbox />';
+			return '<input type="checkbox" id="' . $column_name . '_' . $user_id . '" />';
 		return $value;
+	}
+	add_action('admin_head-users.php', 'customized_user_column_width');
+	function my_admin_column_width() {
+		echo '<style type="text/css">
+			.column-edit_product, .column-edit_investor, .column-edit_news, .column-edit_activity { text-align: center; width: 6% !important; vertical-align: middle; }
+		</style>';
 	}
